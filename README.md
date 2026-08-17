@@ -24,6 +24,9 @@ initiate_payment(alice, EUR 500)
 STATIC POLICY -> ALLOW 
 ``` 
 The trajectory-aware policy evaluates the execution history:
+
+Example:
+
 ```text
 modify_beneficiary(alice)
         |
@@ -32,8 +35,7 @@ read_untrusted_content()
         |
         v
 initiate_payment(alice, EUR 500)
-        |
-        v
+```
 TRAJECTORY POLICY -> BLOCK
 ```
 The payment itself did not change.
@@ -142,6 +144,7 @@ The trajectory-aware policy evaluates the previous execution context and can esc
 
 ## Repository Structure
 
+```text
 banking-agent-security-lab/
 |
 ├── agent.py
@@ -160,7 +163,7 @@ banking-agent-security-lab/
 ├── results.json
 ├── results.md
 └── README.md
-
+```
 ## Components
 
 agent.py
