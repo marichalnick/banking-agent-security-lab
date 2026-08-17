@@ -53,8 +53,7 @@ Decision changes	2 / 8
 
 Both additional interventions occurred in scenarios where the static policy would have allowed the payment.
 
-Research Question
-
+## Research Question
 Can security decisions improve when an AI agent’s ordered execution trajectory is considered, rather than evaluating each tool call independently?
 
 The lab compares:
@@ -62,7 +61,7 @@ The lab compares:
 1. Static policy — evaluates the current action independently.
 2. Trajectory-aware policy — evaluates the current action using security-relevant state extracted from the ordered execution trajectory.
 
-Architecture
+## Architecture
 
                     AI AGENT
                        |
@@ -139,7 +138,7 @@ The individual payment action may appear permitted in isolation.
 
 The trajectory-aware policy evaluates the previous execution context and can escalate the action.
 
-Repository Structure
+## Repository Structure
 
 banking-agent-security-lab/
 |
@@ -160,7 +159,7 @@ banking-agent-security-lab/
 ├── results.md
 └── README.md
 
-Components
+## Components
 
 agent.py
 
@@ -222,7 +221,7 @@ results.md
 
 Documents the methodology, results, interpretation, and limitations.
 
-Experimental Results
+## Experimental Results
 
 The benchmark contains eight controlled scenarios.
 
@@ -248,7 +247,7 @@ In this controlled benchmark, trajectory-aware evaluation changed the enforcemen
 
 Both changes occurred where the static policy would have allowed the payment action.
 
-Adversarial Testing
+## Adversarial Testing
 
 The lab tests variations including:
 
@@ -260,7 +259,7 @@ The lab tests variations including:
 
 The purpose is to determine whether the security logic responds to relevant execution context rather than simply blocking whenever suspicious activity appears.
 
-Threat Model
+## Threat Model
 
 The simulated agent can:
 
@@ -280,7 +279,7 @@ The security layer does not rely exclusively on the agent to reject such instruc
 
 Consequential actions are evaluated independently by the security control layer.
 
-Key Concept
+## Key Concept
 
 The central concept explored by this lab is trajectory-aware security.
 
@@ -312,7 +311,7 @@ Decision
 
 This matters because a sequence of individually permitted actions can create risk that is not visible when each action is evaluated independently.
 
-Limitations
+## Limitations
 
 This is a controlled research lab and does not represent production banking infrastructure.
 
@@ -329,7 +328,7 @@ The benchmark does not establish real-world attack prevalence or production secu
 
 It demonstrates the behaviour of the implemented security model under the tested scenarios.
 
-Future Work
+## Future Work
 
 Potential extensions include:
 
@@ -343,7 +342,7 @@ Potential extensions include:
 8. Measuring false-positive and false-negative behaviour.
 9. Expanding the benchmark to a larger scenario set.
 
-Research Position
+## Research Position
 
 This project does not claim that trajectory-aware security is a complete security solution for AI agents.
 
