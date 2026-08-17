@@ -22,7 +22,7 @@ initiate_payment(alice, EUR 500)
         |
         v
 STATIC POLICY -> ALLOW 
-```
+``` 
 The trajectory-aware policy evaluates the execution history:
 ```text
 modify_beneficiary(alice)
@@ -35,7 +35,7 @@ initiate_payment(alice, EUR 500)
         |
         v
 TRAJECTORY POLICY -> BLOCK
-``
+```
 The payment itself did not change.
 
 The security decision changed because the execution trajectory changed.
