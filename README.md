@@ -1,55 +1,31 @@
 # Banking AI Agent Security Lab
 
-A controlled research lab exploring security controls for AI agents performing consequential banking actions.
+**A controlled security research lab for testing trajectory-aware controls for AI agents performing consequential banking actions.**
 
-The project focuses on a specific question:
+The lab demonstrates a simple security gap:
 
-> Can security decisions improve when an agent's ordered execution trajectory is considered, rather than evaluating each tool call independently?
+> An individual tool call can appear safe while the sequence of actions leading to that call creates a security risk.
 
-## Research Question
+## What I Built
 
-How should an enterprise security layer evaluate an AI agent when risk emerges from the sequence of actions performed during an execution?
+The lab implements a security layer between an AI agent and its tools.
 
-The lab compares:
+It evaluates:
 
-1. **Static policy** — evaluates the current action independently.
-2. **Trajectory-aware policy** — evaluates the current action using relevant state extracted from the ordered execution trajectory.
+- **Tool risk** — what can the requested tool do?
+- **Trajectory risk** — what happened earlier in the execution?
+- **Tool registration** — is the requested capability explicitly registered?
+- **Security decision** — should the action be allowed, reviewed, or blocked?
 
----
+The result is a model-agnostic enforcement layer that can evaluate an agent's actions before consequential tool execution.
 
-# Architecture
+## Key Demonstration
+
+A static policy evaluates the payment independently:
 
 ```text
-                    AI AGENT
-                       |
-                       v
-                Proposed Action
-                       |
-                       v
-                Tool Registry
-                       |
-                       v
-                Security Gate
-                       |
-          +------------+------------+
-          |            |            |
-          v            v            v
-      Tool Risk   Trajectory    Tool Metadata
-                     State
-          |            |
-          +------+-----+
-                 |
-                 v
-             Risk Engine
-                 |
-                 v
-ALLOW / REVIEW / BLOCK
-
-          /        |        \
-
-         v         v         v
-
-      Execute    Review    Prevent
-
-       Tool     / Escalate   Tool
-
+modify_beneficiary(alice)
+        ↓
+initiate_payment(alice, €500)
+        ↓
+STATIC POLICY → ALLOW
