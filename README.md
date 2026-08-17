@@ -11,9 +11,7 @@ It evaluates:
 - **Security decision** — should the action be allowed, reviewed, or blocked?
 The result is a model-agnostic enforcement layer that can evaluate an agent's actions before consequential tool execution.
 ## Key Demonstration
-
 A static policy evaluates the payment independently:
-
 ```text
 modify_beneficiary(alice)
         |
@@ -22,7 +20,9 @@ initiate_payment(alice, EUR 500)
         |
         v
 STATIC POLICY -> ALLOW
+
 The trajectory-aware policy evaluates the execution history:
+
 modify_beneficiary(alice)
         |
         v
@@ -33,69 +33,112 @@ initiate_payment(alice, EUR 500)
         |
         v
 TRAJECTORY POLICY -> BLOCK
+
 The payment itself did not change.
 
 The security decision changed because the execution trajectory changed.
 
-## Benchmark Result
-The controlled benchmark contains **8 scenarios**.
-| Metric | Result |
-|---|---:|
-| Scenarios tested | 8 |
-| Static executions allowed | 4 |
-| Trajectory executions allowed | 2 |
-| Additional interventions | 2 |
-| Decision changes | 2 / 8 |
+Benchmark Result
+
+The controlled benchmark contains 8 scenarios.
+
+Metric	Result
+Scenarios tested	8
+Static executions allowed	4
+Trajectory executions allowed	2
+Additional interventions	2
+Decision changes	2 / 8
+
 Both additional interventions occurred in scenarios where the static policy would have allowed the payment.
-## Research Question
-> Can security decisions improve when an AI agent's ordered execution trajectory is considered, rather than evaluating each tool call independently?
+
+Research Question
+
+Can security decisions improve when an AI agent’s ordered execution trajectory is considered, rather than evaluating each tool call independently?
+
 The lab compares:
-1. **Static policy** — evaluates the current action independently.
-2. **Trajectory-aware policy** — evaluates the current action using security-relevant state extracted from the ordered execution trajectory.
-## Architecture
-AI Agent  
-↓  
-Proposed Action  
-↓  
-Tool Registry  
-↓  
-Security Gate  
-↓  
-Tool Risk + Trajectory State + Tool Metadata  
-↓  
-Risk Engine  
-↓  
-ALLOW / REVIEW / BLOCK  
-↓  
-Execute Tool / Review or Escalate / Prevent Tool
-## Security Model
+
+1. Static policy — evaluates the current action independently.
+2. Trajectory-aware policy — evaluates the current action using security-relevant state extracted from the ordered execution trajectory.
+
+Architecture
+
+                    AI AGENT
+                       |
+                       v
+                Proposed Action
+                       |
+                       v
+                Tool Registry
+                       |
+                       v
+                Security Gate
+                       |
+          +------------+------------+
+          |            |            |
+          v            v            v
+      Tool Risk   Trajectory    Tool Metadata
+                     State
+          |            |
+          +------+-----+
+                 |
+                 v
+             Risk Engine
+                 |
+                 v
+        ALLOW / REVIEW / BLOCK
+          /        |        \
+         v         v         v
+      Execute    Review    Prevent
+       Tool     / Escalate   Tool
+
+Security Model
+
 The lab evaluates three main dimensions.
-### 1. Tool Registration
+
+1. Tool Registration
+
 The security layer verifies that an agent can only invoke registered tools.
+
 Example:
-`transfer_all_funds()`
-→ Tool not registered
-→ **BLOCK**
-### 2. Tool Consequence
+
+transfer_all_funds()
+        |
+        v
+Tool not registered
+        |
+        v
+BLOCK
+
+2. Tool Consequence
+
 Tools are classified according to their potential consequence.
-| Consequence | Example | Category |
-|---|---|---|
-| READ | `get_account()` | LOW |
-| STATE_CHANGE | `modify_beneficiary()` | MEDIUM |
-| READ_EXTERNAL | `read_untrusted_content()` | CONTEXT_CHANGE |
-| FINANCIAL_ACTION | `initiate_payment()` | HIGH |
-### 3. Execution Trajectory
+
+Consequence	Example	Category
+READ	get_account()	LOW
+STATE_CHANGE	modify_beneficiary()	MEDIUM
+READ_EXTERNAL	read_untrusted_content()	CONTEXT_CHANGE
+FINANCIAL_ACTION	initiate_payment()	HIGH
+
+3. Execution Trajectory
+
 The security layer extracts relevant state from the ordered sequence of previous actions.
+
 Example:
-`modify_beneficiary(alice)`  
-↓  
-`read_untrusted_content()`  
-↓  
-`initiate_payment(alice, EUR 500)`
+
+modify_beneficiary(alice)
+        |
+        v
+read_untrusted_content()
+        |
+        v
+initiate_payment(alice, EUR 500)
+
 The individual payment action may appear permitted in isolation.
+
 The trajectory-aware policy evaluates the previous execution context and can escalate the action.
-## Repository Structure
-```text
+
+Repository Structure
+
 banking-agent-security-lab/
 |
 ├── agent.py
@@ -241,11 +284,29 @@ The central concept explored by this lab is trajectory-aware security.
 
 Traditional action-level evaluation:
 
-Current action → Policy → Decision
+Current action
+      |
+      v
+Policy
+      |
+      v
+Decision
 
 Trajectory-aware evaluation:
 
-Previous actions → Execution state → Current action → Risk assessment → Decision
+Previous actions
+      |
+      v
+Execution state
+      |
+      v
+Current action
+      |
+      v
+Risk assessment
+      |
+      v
+Decision
 
 This matters because a sequence of individually permitted actions can create risk that is not visible when each action is evaluated independently.
 
