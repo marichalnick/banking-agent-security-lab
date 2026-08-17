@@ -370,7 +370,3 @@ It explores one specific hypothesis:
 Security controls for consequential AI-agent actions may benefit from evaluating the ordered execution trajectory, rather than relying exclusively on isolated tool-call authorization.
 
 The lab provides a reproducible environment for testing that hypothesis.
-
-Daarna:
-**Commit changes → `Improve README structure and documentation` → Commit directly to `main` → Commit changes.**
-Daarna refresh je de repo. **Niet meer copy-pasten of stukjes toevoegen.** Dit is de volledige README.
