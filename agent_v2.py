@@ -273,8 +273,8 @@ def run_unknown_tool_attack():
     action = {
         "type": "transfer_all_funds",
         "destination": "external-account"
-    }
-
+}
+    
     result = execute_action(
         action,
         trajectory
@@ -283,13 +283,13 @@ def run_unknown_tool_attack():
     print(f"\nResult: {result}")
 
 
-print("================================")
-print("BANKING AGENT SECURITY LAB")
-print("AGENT V2")
-print("================================")
+if __name__ == "__main__":
 
-run_normal_agent()
+    print("================================")
+    print("BANKING AGENT SECURITY LAB")
+    print("AGENT V2")
+    print("================================")
 
-run_suspicious_agent()
-
-run_unknown_tool_attack()
+    run_normal_agent()
+    run_suspicious_agent()
+    run_unknown_tool_attack()
