@@ -11,14 +11,32 @@ It evaluates:
 - **Security decision** — should the action be allowed, reviewed, or blocked?
 The result is a model-agnostic enforcement layer that can evaluate an agent's actions before consequential tool execution.
 ## Key Demonstration
-A static policy evaluates the payment independently.
-**Static policy**
-`modify_beneficiary(alice)` → `initiate_payment(alice, EUR 500)` → **ALLOW**
-The trajectory-aware policy evaluates the execution history.
-**Trajectory-aware policy**
-`modify_beneficiary(alice)` → `read_untrusted_content()` → `initiate_payment(alice, EUR 500)` → **BLOCK**
+
+A static policy evaluates the payment independently:
+
+```text
+modify_beneficiary(alice)
+        |
+        v
+initiate_payment(alice, EUR 500)
+        |
+        v
+STATIC POLICY -> ALLOW
+The trajectory-aware policy evaluates the execution history:
+modify_beneficiary(alice)
+        |
+        v
+read_untrusted_content()
+        |
+        v
+initiate_payment(alice, EUR 500)
+        |
+        v
+TRAJECTORY POLICY -> BLOCK
 The payment itself did not change.
-**The security decision changed because the execution trajectory changed.**
+
+The security decision changed because the execution trajectory changed.
+
 ## Benchmark Result
 The controlled benchmark contains **8 scenarios**.
 | Metric | Result |
