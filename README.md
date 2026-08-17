@@ -1,3 +1,19 @@
+Ja. Die fout is mijn vorige instructie: ik gaf je een “copy-paste” waarin de Markdown-codefences niet correct behouden waren. Daardoor heeft GitHub alles vanaf het eerste ```text als één groot codeblok geïnterpreteerd.
+
+Je hoeft nu niet opnieuw zelf te knippen/plakken.
+
+Doe dit nu
+
+In GitHub bij README.md:
+
+1. Cmd + A
+2. Verwijder alles.
+3. Plak alleen de inhoud hieronder — vanaf # Banking AI Agent Security Lab tot en met de laatste zin.
+4. Niet de zin “Ja. Kopieer alles…” en ook niet de afsluitende instructies meenemen.
+5. Commit.
+
+Ik geef je hieronder een versie die geen geneste codeblokken gebruikt, zodat dit deze keer niet opnieuw fout kan gaan:
+
 # Banking AI Agent Security Lab
 **A controlled security research lab for testing trajectory-aware controls for AI agents performing consequential banking actions.**
 The lab demonstrates a simple security gap:
@@ -11,140 +27,73 @@ It evaluates:
 - **Security decision** — should the action be allowed, reviewed, or blocked?
 The result is a model-agnostic enforcement layer that can evaluate an agent's actions before consequential tool execution.
 ## Key Demonstration
-A static policy evaluates the payment independently:
-```text
-modify_beneficiary(alice)
-        |
-        v
-initiate_payment(alice, EUR 500)
-        |
-        v
-STATIC POLICY -> ALLOW
-
-The trajectory-aware policy evaluates the execution history:
-
-modify_beneficiary(alice)
-        |
-        v
-read_untrusted_content()
-        |
-        v
-initiate_payment(alice, EUR 500)
-        |
-        v
-TRAJECTORY POLICY -> BLOCK
-
+A static policy evaluates the payment independently.
+**Static policy**
+`modify_beneficiary(alice)` → `initiate_payment(alice, EUR 500)` → **ALLOW**
+The trajectory-aware policy evaluates the execution history.
+**Trajectory-aware policy**
+`modify_beneficiary(alice)` → `read_untrusted_content()` → `initiate_payment(alice, EUR 500)` → **BLOCK**
 The payment itself did not change.
-
-The security decision changed because the execution trajectory changed.
-
-Benchmark Result
-
-The controlled benchmark contains 8 scenarios.
-
-Metric	Result
-Scenarios tested	8
-Static executions allowed	4
-Trajectory executions allowed	2
-Additional interventions	2
-Decision changes	2 / 8
-
+**The security decision changed because the execution trajectory changed.**
+## Benchmark Result
+The controlled benchmark contains **8 scenarios**.
+| Metric | Result |
+|---|---:|
+| Scenarios tested | 8 |
+| Static executions allowed | 4 |
+| Trajectory executions allowed | 2 |
+| Additional interventions | 2 |
+| Decision changes | 2 / 8 |
 Both additional interventions occurred in scenarios where the static policy would have allowed the payment.
-
-Research Question
-
-Can security decisions improve when an AI agent’s ordered execution trajectory is considered, rather than evaluating each tool call independently?
-
+## Research Question
+> Can security decisions improve when an AI agent's ordered execution trajectory is considered, rather than evaluating each tool call independently?
 The lab compares:
-
-1. Static policy — evaluates the current action independently.
-2. Trajectory-aware policy — evaluates the current action using security-relevant state extracted from the ordered execution trajectory.
-
-⸻
-
-Architecture
-
-                    AI AGENT
-                       |
-                       v
-                Proposed Action
-                       |
-                       v
-                Tool Registry
-                       |
-                       v
-                Security Gate
-                       |
-          +------------+------------+
-          |            |            |
-          v            v            v
-      Tool Risk   Trajectory    Tool Metadata
-                     State
-          |            |
-          +------+-----+
-                 |
-                 v
-             Risk Engine
-                 |
-                 v
-        ALLOW / REVIEW / BLOCK
-          /        |        \
-         v         v         v
-      Execute    Review    Prevent
-       Tool     / Escalate   Tool
-
-⸻
-
-Security Model
-
+1. **Static policy** — evaluates the current action independently.
+2. **Trajectory-aware policy** — evaluates the current action using security-relevant state extracted from the ordered execution trajectory.
+## Architecture
+AI Agent  
+↓  
+Proposed Action  
+↓  
+Tool Registry  
+↓  
+Security Gate  
+↓  
+Tool Risk + Trajectory State + Tool Metadata  
+↓  
+Risk Engine  
+↓  
+ALLOW / REVIEW / BLOCK  
+↓  
+Execute Tool / Review or Escalate / Prevent Tool
+## Security Model
 The lab evaluates three main dimensions.
-
-1. Tool Registration
-
+### 1. Tool Registration
 The security layer verifies that an agent can only invoke registered tools.
-
 Example:
-
-transfer_all_funds()
-        |
-        v
-Tool not registered
-        |
-        v
-BLOCK
-
-2. Tool Consequence
-
+`transfer_all_funds()`
+→ Tool not registered
+→ **BLOCK**
+### 2. Tool Consequence
 Tools are classified according to their potential consequence.
-
-Consequence	Example	Category
-READ	get_account()	LOW
-STATE_CHANGE	modify_beneficiary()	MEDIUM
-READ_EXTERNAL	read_untrusted_content()	CONTEXT_CHANGE
-FINANCIAL_ACTION	initiate_payment()	HIGH
-
-3. Execution Trajectory
-
+| Consequence | Example | Category |
+|---|---|---|
+| READ | `get_account()` | LOW |
+| STATE_CHANGE | `modify_beneficiary()` | MEDIUM |
+| READ_EXTERNAL | `read_untrusted_content()` | CONTEXT_CHANGE |
+| FINANCIAL_ACTION | `initiate_payment()` | HIGH |
+### 3. Execution Trajectory
 The security layer extracts relevant state from the ordered sequence of previous actions.
-
 Example:
-
-modify_beneficiary(alice)
-        |
-        v
-read_untrusted_content()
-        |
-        v
-initiate_payment(alice, EUR 500)
-
+`modify_beneficiary(alice)`  
+↓  
+`read_untrusted_content()`  
+↓  
+`initiate_payment(alice, EUR 500)`
 The individual payment action may appear permitted in isolation.
-
 The trajectory-aware policy evaluates the previous execution context and can escalate the action.
-
-⸻
-
-Repository Structure
-
+## Repository Structure
+```text
 banking-agent-security-lab/
 |
 ├── agent.py
@@ -200,15 +149,15 @@ risk.py
 
 Maps tool and trajectory context to risk levels:
 
-LOW
-MEDIUM
-HIGH
+* LOW
+* MEDIUM
+* HIGH
 
 and enforcement decisions:
 
-ALLOW
-REVIEW
-BLOCK
+* ALLOW
+* REVIEW
+* BLOCK
 
 experiment.py
 
@@ -225,8 +174,6 @@ Compares static and trajectory-aware enforcement across eight controlled scenari
 results.md
 
 Documents the methodology, results, interpretation, and limitations.
-
-⸻
 
 Experimental Results
 
@@ -254,8 +201,6 @@ In this controlled benchmark, trajectory-aware evaluation changed the enforcemen
 
 Both changes occurred where the static policy would have allowed the payment action.
 
-⸻
-
 Adversarial Testing
 
 The lab tests variations including:
@@ -267,8 +212,6 @@ The lab tests variations including:
 * untrusted content combined with an unrelated beneficiary
 
 The purpose is to determine whether the security logic responds to relevant execution context rather than simply blocking whenever suspicious activity appears.
-
-⸻
 
 Threat Model
 
@@ -290,41 +233,19 @@ The security layer does not rely exclusively on the agent to reject such instruc
 
 Consequential actions are evaluated independently by the security control layer.
 
-⸻
-
 Key Concept
 
 The central concept explored by this lab is trajectory-aware security.
 
 Traditional action-level evaluation:
 
-Current action
-      |
-      v
-Policy
-      |
-      v
-Decision
+Current action → Policy → Decision
 
 Trajectory-aware evaluation:
 
-Previous actions
-      |
-      v
-Execution state
-      |
-      v
-Current action
-      |
-      v
-Risk assessment
-      |
-      v
-Decision
+Previous actions → Execution state → Current action → Risk assessment → Decision
 
 This matters because a sequence of individually permitted actions can create risk that is not visible when each action is evaluated independently.
-
-⸻
 
 Limitations
 
@@ -343,8 +264,6 @@ The benchmark does not establish real-world attack prevalence or production secu
 
 It demonstrates the behaviour of the implemented security model under the tested scenarios.
 
-⸻
-
 Future Work
 
 Potential extensions include:
@@ -358,8 +277,6 @@ Potential extensions include:
 7. Testing additional prompt-injection scenarios.
 8. Measuring false-positive and false-negative behaviour.
 9. Expanding the benchmark to a larger scenario set.
-
-⸻
 
 Research Position
 
