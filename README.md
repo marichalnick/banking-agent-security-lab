@@ -1,19 +1,3 @@
-Ja. Die fout is mijn vorige instructie: ik gaf je een “copy-paste” waarin de Markdown-codefences niet correct behouden waren. Daardoor heeft GitHub alles vanaf het eerste ```text als één groot codeblok geïnterpreteerd.
-
-Je hoeft nu niet opnieuw zelf te knippen/plakken.
-
-Doe dit nu
-
-In GitHub bij README.md:
-
-1. Cmd + A
-2. Verwijder alles.
-3. Plak alleen de inhoud hieronder — vanaf # Banking AI Agent Security Lab tot en met de laatste zin.
-4. Niet de zin “Ja. Kopieer alles…” en ook niet de afsluitende instructies meenemen.
-5. Commit.
-
-Ik geef je hieronder een versie die geen geneste codeblokken gebruikt, zodat dit deze keer niet opnieuw fout kan gaan:
-
 # Banking AI Agent Security Lab
 **A controlled security research lab for testing trajectory-aware controls for AI agents performing consequential banking actions.**
 The lab demonstrates a simple security gap:
